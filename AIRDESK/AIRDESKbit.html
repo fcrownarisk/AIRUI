@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIRDESK | Decentralized Workspace</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --bitcoin-orange: #f7931a;
+            --bitcoin-dark: #4d4d4d;
+            --blockchain-blue: #0052cc;
+            --crypto-purple: #6b3be2;
+            --decentralized-green: #2ecc71;
+            --dark-bg: #0a0b0d;
+            --darker-bg: #070809;
+            --card-bg: #131517;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --gradient-btc: linear-gradient(135deg, #f7931a, #fbb450);
+            --gradient-blockchain: linear-gradient(135deg, #0052cc, #6b3be2);
+            --gradient-cyber: linear-gradient(135deg, #00ff88, #00b8ff);
+            --neon-glow: 0 0 10px rgba(247, 147, 26, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Bitcoin Matrix Background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.03;
+            pointer-events: none;
+        }
+
+        .matrix-bg canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Blockchain Connection Lines */
+        .connection-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .node {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--bitcoin-orange);
+            border-radius: 50%;
+            box-shadow: 0 0 20px var(--bitcoin-orange);
+        }
+
+        /* Custom Cursor - Bitcoin Style */
+        .cursor {
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--bitcoin-orange);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.2s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-follower {
+            width: 60px;
+            height: 60px;
+            background: rgba(247, 147, 26, 0.05);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.4s ease;
+            transform: translate(-50%, -50%);
+            border: 1px dashed var(--bitcoin-orange);
+        }
+
+        /* Navigation - Blockchain Style */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(7, 8, 9, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(247, 147, 26, 0.1);
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            position: relative;
+        }
+
+        .logo-text {
+            background: var(--gradient-btc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btc-symbol {
+            display: inline-block;
+            animation: rotate3d 10s linear infinite;
+            margin-right: 5px;
+        }
+
+        @keyframes rotate3d {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--gradient-btc);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.5s ease;
+        }
+
+        .logo:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::before {
+            content: '◈';
+            position: absolute;
+            left: -20px;
+            opacity: 0;
+            color: var(--bitcoin-orange);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover::before {
+            opacity: 1;
+            left: -15px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-btc);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .wallet-connect {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(247, 147, 26, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            border: 1px solid rgba(247, 147, 26, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .wallet-connect:hover {
+            background: rgba(247, 147, 26, 0.2);
+            border-color: var(--bitcoin-orange);
+            box-shadow: 0 0 20px rgba(247, 147, 26, 0.3);
+        }
+
+        .wallet-dot {
+            width: 10px;
+            height: 10px;
+            background: #2ecc71;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Hero Section - Decentralized Theme */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 5%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(247, 147, 26, 0.05) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 700px;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(247, 147, 26, 0.1);
+            border: 1px solid rgba(247, 147, 26, 0.3);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-badge span {
+            color: var(--bitcoin-orange);
+        }
+
+        .hero-title {
+            font-size: 5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .gradient-text {
+            background: var(--gradient-btc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .blockchain-text {
+            background: var(--gradient-blockchain);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--gradient-btc);
+            color: var(--dark-bg);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px -10px var(--bitcoin-orange);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--bitcoin-orange);
+            color: var(--bitcoin-orange);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: var(--bitcoin-orange);
+            color: var(--dark-bg);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 4rem;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            text-align: left;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--bitcoin-orange);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btc-icon {
+            font-size: 1.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .hero-visual {
+            flex: 1;
+            position: relative;
+            height: 600px;
+        }
+
+        /* Blockchain Visualization */
+        .blockchain-viz {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .block {
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background: rgba(19, 21, 23, 0.9);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(247, 147, 26, 0.3);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 0 30px rgba(247, 147, 26, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .block:hover {
+            border-color: var(--bitcoin-orange);
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(247, 147, 26, 0.2);
+        }
+
+        .block-1 {
+            top: 20%;
+            right: 10%;
+            transform: rotate(5deg);
+        }
+
+        .block-2 {
+            bottom: 20%;
+            right: 30%;
+            transform: rotate(-5deg);
+            animation-delay: 0.5s;
+        }
+
+        .block-3 {
+            top: 40%;
+            right: 40%;
+            transform: rotate(10deg);
+            animation-delay: 1s;
+        }
+
+        .block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            color: var(--bitcoin-orange);
+            font-size: 0.9rem;
+        }
+
+        .block-hash {
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            word-break: break-all;
+        }
+
+        .block-data {
+            margin-top: 1rem;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .block-link {
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--bitcoin-orange), transparent);
+            transform-origin: left;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 8rem 5%;
+            background: linear-gradient(to bottom, transparent, rgba(247, 147, 26, 0.02));
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(247, 147, 26, 0.1);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(247, 147, 26, 0.3);
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(247, 147, 26, 0.1);
+            border-radius: 30px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-btc);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--bitcoin-orange);
+            box-shadow: 0 20px 40px rgba(247, 147, 26, 0.1);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, rgba(247, 147, 26, 0.1), rgba(107, 59, 226, 0.1));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            border: 1px solid rgba(247, 147, 26, 0.3);
+        }
+
+        .feature-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-link {
+            color: var(--bitcoin-orange);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s ease;
+        }
+
+        .feature-link:hover {
+            gap: 1rem;
+        }
+
+        /* Smart Contract Section */
+        .smart-contracts {
+            padding: 8rem 5%;
+            background: var(--darker-bg);
+            position: relative;
+        }
+
+        .contracts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contract-info {
+            padding: 2rem;
+        }
+
+        .contract-code {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(247, 147, 26, 0.2);
+            font-family: monospace;
+            position: relative;
+        }
+
+        .code-line {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .code-comment {
+            color: #6b7280;
+        }
+
+        .code-keyword {
+            color: var(--bitcoin-orange);
+        }
+
+        .code-function {
+            color: #00ff88;
+        }
+
+        .contract-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .contract-stat {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(247, 147, 26, 0.05);
+            border-radius: 15px;
+        }
+
+        .contract-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--bitcoin-orange);
+        }
+
+        /* Workspaces Grid - NFT Style */
+        .workspaces {
+            padding: 8rem 5%;
+        }
+
+        .workspaces-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 4rem auto 0;
+        }
+
+        .workspace-card {
+            background: var(--card-bg);
+            border: 2px solid rgba(247, 147, 26, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .workspace-card:hover {
+            transform: scale(1.02);
+            border-color: var(--bitcoin-orange);
+            box-shadow: 0 20px 40px rgba(247, 147, 26, 0.2);
+        }
+
+        .workspace-image {
+            height: 200px;
+            background: linear-gradient(45deg, var(--bitcoin-orange), var(--crypto-purple));
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nft-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            border: 1px solid var(--bitcoin-orange);
+        }
+
+        .workspace-content {
+            padding: 1.5rem;
+        }
+
+        .workspace-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .workspace-location {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .workspace-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--bitcoin-orange);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .workspace-price span {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .workspace-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .workspace-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .workspace-rating span {
+            color: var(--bitcoin-orange);
+        }
+
+        /* DAO Governance Section */
+        .dao-section {
+            padding: 8rem 5%;
+            background: linear-gradient(to top, transparent, rgba(247, 147, 26, 0.02));
+        }
+
+        .dao-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .voting-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(247, 147, 26, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .proposal-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .proposal-item:last-child {
+            border-bottom: none;
+        }
+
+        .proposal-votes {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .vote-yes {
+            color: #2ecc71;
+        }
+
+        .vote-no {
+            color: #e74c3c;
+        }
+
+        .vote-bar {
+            height: 6px;
+            background: rgba(247, 147, 26, 0.2);
+            border-radius: 10px;
+            margin: 0.5rem 0;
+            position: relative;
+        }
+
+        .vote-progress {
+            height: 100%;
+            background: var(--gradient-btc);
+            border-radius: 10px;
+            width: 75%;
+        }
+
+        /* Lightning Network Section */
+        .lightning-section {
+            padding: 4rem 5%;
+            text-align: center;
+        }
+
+        .lightning-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 3rem auto;
+        }
+
+        .lightning-card {
+            background: rgba(247, 147, 26, 0.05);
+            border: 1px solid rgba(247, 147, 26, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .lightning-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--bitcoin-orange);
+        }
+
+        .lightning-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--bitcoin-orange);
+        }
+
+        .lightning-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--bitcoin-orange);
+        }
+
+        /* Testimonials */
+        .testimonials {
+            padding: 8rem 5%;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .testimonial-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(247, 147, 26, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .testimonial-card::after {
+            content: '₿';
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            font-size: 3rem;
+            opacity: 0.1;
+            color: var(--bitcoin-orange);
+        }
+
+        .testimonial-text {
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-btc);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 8rem 5%;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(247, 147, 26, 0.1), rgba(107, 59, 226, 0.1));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(247, 147, 26, 0.03) 10px,
+                rgba(247, 147, 26, 0.03) 20px
+            );
+            animation: moveBg 20s linear infinite;
+        }
+
+        @keyframes moveBg {
+            from { transform: translate(0, 0); }
+            to { transform: translate(10%, 10%); }
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 2;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-description {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
+        }
+
+        .btc-ticker {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50px;
+            font-family: monospace;
+        }
+
+        .ticker-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .ticker-up {
+            color: #2ecc71;
+        }
+
+        .ticker-down {
+            color: #e74c3c;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 5% 2rem;
+            background: var(--darker-bg);
+            border-top: 1px solid rgba(247, 147, 26, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr repeat(4, 1fr);
+            gap: 4rem;
+            margin-bottom: 4rem;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .footer-description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .btc-price {
+            background: rgba(247, 147, 26, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(247, 147, 26, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .social-link:hover {
+            background: var(--bitcoin-orange);
+            transform: translateY(-5px);
+            border-color: var(--bitcoin-orange);
+        }
+
+        .footer-column h4 {
+            margin-bottom: 1.5rem;
+            color: var(--bitcoin-orange);
+        }
+
+        .footer-column a {
+            display: block;
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-bottom: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--bitcoin-orange);
+            transform: translateX(5px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(247, 147, 26, 0.1);
+            color: var(--text-secondary);
+        }
+
+        /* Mining Pool Animation */
+        .mining-pool {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--bitcoin-orange);
+            z-index: 1000;
+            font-family: monospace;
+        }
+
+        .mining-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+        }
+
+        .hashrate {
+            color: var(--bitcoin-orange);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 4rem;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 100px;
+            }
+
+            .hero-title {
+                font-size: 3rem;
+            }
+
+            .hero-stats {
+                justify-content: center;
+            }
+
+            .contracts-container,
+            .dao-container {
+                grid-template-columns: 1fr;
+            }
+
+            .lightning-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(var(--rotate)); }
+            50% { transform: translateY(-20px) rotate(var(--rotate)); }
+        }
+
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(247, 147, 26, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(247, 147, 26, 0.6); }
+        }
+
+        .glow {
+            animation: glow 3s ease-in-out infinite;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .miner {
+            text-align: center;
+        }
+
+        .miner-block {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, var(--bitcoin-orange), var(--crypto-purple));
+            margin: 0 auto 2rem;
+            animation: mine 2s infinite;
+            border-radius: 10px;
+        }
+
+        @keyframes mine {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        .mining-text {
+            font-family: monospace;
+            color: var(--bitcoin-orange);
+        }
+
+        .mining-text::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40%, 60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="miner">
+            <div class="miner-block"></div>
+            <div class="mining-text">Mining Block #840,000</div>
+            <div style="margin-top: 1rem; color: var(--text-secondary);">Nonce: 0x<span id="nonce">00000000</span></div>
+        </div>
+    </div>
+
+    <!-- Matrix Background -->
+    <div class="matrix-bg">
+        <canvas id="matrixCanvas"></canvas>
+    </div>
+
+    <!-- Connection Lines -->
+    <div class="connection-lines" id="connectionLines"></div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Mining Pool Stats -->
+    <div class="mining-pool">
+        <div class="mining-stats">
+            <span class="hashrate">⚡ Hashrate: 425 EH/s</span>
+            <span>🔗 Difficulty: 82.3T</span>
+            <span>₿ Price: $63,421</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <span class="btc-symbol">₿</span>
+            <span class="logo-text">AIR</span>
+            <span class="blockchain-text">DESK</span>
+        </div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#features">Protocol</a>
+            <a href="#workspaces">Spaces</a>
+            <a href="#dao">DAO</a>
+            <a href="#lightning">Lightning</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <div class="wallet-connect" id="walletConnect">
+            <div class="wallet-dot"></div>
+            <span>0x3f5...8e2a</span>
+            <span>₿ 2.45</span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span>⚡</span> Powered by Bitcoin Blockchain
+            </div>
+            <h1 class="hero-title">
+                Decentralize Your
+                <span class="gradient-text">Workspace</span>
+                <br>with
+                <span class="blockchain-text">₿itcoin</span>
+            </h1>
+            <p class="hero-description">
+                Join the first decentralized workspace platform. Book spaces with BTC, earn yields through staking, and participate in DAO governance. No intermediaries, true ownership.
+            </p>
+            <div class="hero-cta">
+                <a href="#" class="btn btn-primary">
+                    <span>⚡</span> Connect Wallet
+                </a>
+                <a href="#" class="btn btn-outline">
+                    <span>📜</span> View Whitepaper
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number">
+                        <span class="btc-icon">₿</span>
+                        2,450+
+                    </div>
+                    <div class="stat-label">Spaces Tokenized</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">
+                        <span class="btc-icon">⚡</span>
+                        125K
+                    </div>
+                    <div class="stat-label">Lightning Users</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">
+                        <span class="btc-icon">🏛️</span>
+                        $45M
+                    </div>
+                    <div class="stat-label">TVL</div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="blockchain-viz">
+                <div class="block block-1 float" style="--rotate: 5deg;">
+                    <div class="block-header">
+                        <span>#840,000</span>
+                        <span>⚡</span>
+                    </div>
+                    <div class="block-hash">0000000000000000000...</div>
+                    <div class="block-data">
+                        <div class="data-row">
+                            <span>Nonce</span>
+                            <span>0x4a3f8b</span>
+                        </div>
+                        <div class="data-row">
+                            <span>Tx</span>
+                            <span>2,456</span>
+                        </div>
+                        <div class="data-row">
+                            <span>Size</span>
+                            <span>1.2 MB</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="block block-2 float" style="--rotate: -5deg; animation-delay: 0.5s;">
+                    <div class="block-header">
+                        <span>#839,999</span>
+                        <span>⚡</span>
+                    </div>
+                    <div class="block-hash">0000000000000000000...</div>
+                    <div class="block-data">
+                        <div class="data-row">
+                            <span>Nonce</span>
+                            <span>0x8f3b2a</span>
+                        </div>
+                        <div class="data-row">
+                            <span>Tx</span>
+                            <span>1,893</span>
+                        </div>
+                        <div class="data-row">
+                            <span>Size</span>
+                            <span>1.1 MB</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="block block-3 float" style="--rotate: 10deg; animation-delay: 1s;">
+                    <div class="block-header">
+                        <span>#839,998</span>
+                        <span>⚡</span>
+                    </div>
+                    <div class="block-hash">0000000000000000000...</div>
+                    <div class="block-data">
+                        <div class="data-row">
+                            <span>Nonce</span>
+                            <span>0x1c7d4e</span>
+                        </div>
+                        <div class="data-row">
+                            <span>Tx</span>
+                            <span>2,101</span>
+                        </div>
+                        <div class="data-row">
+                            <span>Size</span>
+                            <span>1.3 MB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="section-header">
+            <span class="section-badge">⚡ Bitcoin Protocol</span>
+            <h2 class="section-title">Decentralized <span class="gradient-text">Workspace</span> Infrastructure</h2>
+            <p>Built on Bitcoin's security, powered by Lightning's speed</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">₿</div>
+                <h3 class="feature-title">Bitcoin Settlement</h3>
+                <p class="feature-description">All bookings settled on the Bitcoin blockchain with multisig security. Immutable records, complete transparency.</p>
+                <a href="#" class="feature-link">View on Mempool →</a>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Lightning Payments</h3>
+                <p class="feature-description">Instant, near-zero fee payments for daily bookings. Pay per hour with Lightning Network.</p>
+                <a href="#" class="feature-link">Open Channel →</a>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3 class="feature-title">Ordinals Integration</h3>
+                <p class="feature-description">Each workspace is an Ordinal inscription. True ownership recorded on the Bitcoin blockchain.</p>
+                <a href="#" class="feature-link">Browse Inscriptions →</a>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🏛️</div>
+                <h3 class="feature-title">DAO Governance</h3>
+                <p class="feature-description">Vote on workspace additions, fee structures, and protocol upgrades with tokenized voting rights.</p>
+                <a href="#" class="feature-link">View Proposals →</a>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📦</div>
+                <h3 class="feature-title">RGB Assets</h3>
+                <p class="feature-description">Issue and trade workspace membership tokens using RGB protocol on Bitcoin.</p>
+                <a href="#" class="feature-link">Explore Assets →</a>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h3 class="feature-title">Multisig Access</h3>
+                <p class="feature-description">2-of-3 multisig for workspace access. You control your entry, not a central authority.</p>
+                <a href="#" class="feature-link">Configure Wallet →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Smart Contract Section -->
+    <section class="smart-contracts">
+        <div class="contracts-container">
+            <div class="contract-info">
+                <span class="section-badge">📜 Smart Contract</span>
+                <h2 class="section-title" style="font-size: 2.5rem;">Trustless <span class="gradient-text">Booking</span> Protocol</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">No intermediaries, no censorship. Pure code on Bitcoin.</p>
+                <div class="contract-stats">
+                    <div class="contract-stat">
+                        <div class="contract-stat-value">12,458</div>
+                        <div>Contracts</div>
+                    </div>
+                    <div class="contract-stat">
+                        <div class="contract-stat-value">₿ 2,450</div>
+                        <div>Locked</div>
+                    </div>
+                    <div class="contract-stat">
+                        <div class="contract-stat-value">100%</div>
+                        <div>Uptime</div>
+                    </div>
+                </div>
+            </div>
+            <div class="contract-code">
+                <span class="code-line"><span class="code-comment">// Bitcoin Smart Contract</span></span>
+                <span class="code-line"><span class="code-keyword">contract</span> <span class="code-function">WorkspaceBooking</span> {</span>
+                <span class="code-line">    <span class="code-keyword">struct</span> Booking {</span>
+                <span class="code-line">        <span class="code-function">address</span> user;</span>
+                <span class="code-line">        <span class="code-function">uint64</span> startTime;</span>
+                <span class="code-line">        <span class="code-function">uint64</span> endTime;</span>
+                <span class="code-line">        <span class="code-function">uint64</span> amount;</span>
+                <span class="code-line">    }</span>
+                <span class="code-line">    </span>
+                <span class="code-line">    <span class="code-keyword">mapping</span>(<span class="code-function">uint256</span> => Booking) bookings;</span>
+                <span class="code-line">    </span>
+                <span class="code-line">    <span class="code-keyword">function</span> <span class="code-function">book</span>(</span>
+                <span class="code-line">        <span class="code-function">uint256</span> workspaceId,</span>
+                <span class="code-line">        <span class="code-function">uint64</span> duration</span>
+                <span class="code-line">    ) <span class="code-keyword">public</span> <span class="code-keyword">payable</span> {</span>
+                <span class="code-line">        <span class="code-comment">// Verify payment</span></span>
+                <span class="code-line">        <span class="code-function">require</span>(msg.value >= rate * duration);</span>
+                <span class="code-line">        </span>
+                <span class="code-line">        <span class="code-comment">// Create booking</span></span>
+                <span class="code-line">        bookings[block.number] = Booking(</span>
+                <span class="code-line">            msg.sender,</span>
+                <span class="code-line">            block.timestamp,</span>
+                <span class="code-line">            block.timestamp + duration,</span>
+                <span class="code-line">            msg.value</span>
+                <span class="code-line">        );</span>
+                <span class="code-line">    }</span>
+                <span class="code-line">}</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workspaces Grid -->
+    <section class="workspaces" id="workspaces">
+        <div class="section-header">
+            <span class="section-badge">🎨 Ordinal Spaces</span>
+            <h2 class="section-title">Tokenized <span class="gradient-text">Workspaces</span></h2>
+            <p>Each space is a unique Bitcoin Ordinal inscription</p>
+        </div>
+        <div class="workspaces-grid">
+            <div class="workspace-card">
+                <div class="workspace-image">
+                    <div class="nft-badge">#4456</div>
+                    <span style="font-size: 3rem;">🏢</span>
+                </div>
+                <div class="workspace-content">
+                    <div class="workspace-title">
+                        <h3>Cyber Hub</h3>
+                        <span>₿ 0.5</span>
+                    </div>
+                    <p class="workspace-location">📍 Bitcoin City, El Salvador</p>
+                    <div class="workspace-price">
+                        ₿ 0.002 <span>/hour</span>
+                    </div>
+                    <div class="workspace-footer">
+                        <div class="workspace-rating">
+                            <span>⚡</span> 4.9 (128)
+                        </div>
+                        <span>🔗 6 confirmations</span>
+                    </div>
+                </div>
+            </div>
+            <div class="workspace-card">
+                <div class="workspace-image">
+                    <div class="nft-badge">#4457</div>
+                    <span style="font-size: 3rem;">🏦</span>
+                </div>
+                <div class="workspace-content">
+                    <div class="workspace-title">
+                        <h3>Lightning Loft</h3>
+                        <span>₿ 0.8</span>
+                    </div>
+                    <p class="workspace-location">📍 Lugano, Switzerland</p>
+                    <div class="workspace-price">
+                        ₿ 0.003 <span>/hour</span>
+                    </div>
+                    <div class="workspace-footer">
+                        <div class="workspace-rating">
+                            <span>⚡</span> 4.8 (256)
+                        </div>
+                        <span>🔗 12 confirmations</span>
+                    </div>
+                </div>
+            </div>
+            <div class="workspace-card">
+                <div class="workspace-image">
+                    <div class="nft-badge">#4458</div>
+                    <span style="font-size: 3rem;">🏛️</span>
+                </div>
+                <div class="workspace-content">
+                    <div class="workspace-title">
+                        <h3>Satoshi Square</h3>
+                        <span>₿ 1.2</span>
+                    </div>
+                    <p class="workspace-location">📍 Austin, Texas</p>
+                    <div class="workspace-price">
+                        ₿ 0.004 <span>/hour</span>
+                    </div>
+                    <div class="workspace-footer">
+                        <div class="workspace-rating">
+                            <span>⚡</span> 5.0 (512)
+                        </div>
+                        <span>🔗 24 confirmations</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DAO Section -->
+    <section class="dao-section" id="dao">
+        <div class="dao-container">
+            <div class="voting-card">
+                <h3 style="margin-bottom: 2rem;">🏛️ Active Proposals</h3>
+                <div class="proposal-item">
+                    <div>
+                        <strong>Add Tokyo Workspace</strong>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Ends in 2 days</div>
+                    </div>
+                    <div class="proposal-votes">
+                        <span class="vote-yes">✓ 156K</span>
+                        <span class="vote-no">✗ 45K</span>
+                    </div>
+                </div>
+                <div class="vote-bar">
+                    <div class="vote-progress" style="width: 78%;"></div>
+                </div>
+                <div class="proposal-item">
+                    <div>
+                        <strong>Reduce Fees to 0.1%</strong>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Ends in 5 days</div>
+                    </div>
+                    <div class="proposal-votes">
+                        <span class="vote-yes">✓ 89K</span>
+                        <span class="vote-no">✗ 67K</span>
+                    </div>
+                </div>
+                <div class="vote-bar">
+                    <div class="vote-progress" style="width: 57%;"></div>
+                </div>
+                <div class="proposal-item">
+                    <div>
+                        <strong>Lightning Integration v2</strong>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Ends in 1 day</div>
+                    </div>
+                    <div class="proposal-votes">
+                        <span class="vote-yes">✓ 234K</span>
+                        <span class="vote-no">✓ 12K</span>
+                    </div>
+                </div>
+                <div class="vote-bar">
+                    <div class="vote-progress" style="width: 95%;"></div>
+                </div>
+                <button class="btn btn-outline" style="margin-top: 2rem; width: 100%;">Vote with AIRDESK tokens</button>
+            </div>
+            <div class="voting-card">
+                <h3 style="margin-bottom: 2rem;">⚡ Your Voting Power</h3>
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; color: var(--bitcoin-orange);">2,450</div>
+                    <div style="color: var(--text-secondary);">AIRDESK Tokens</div>
+                    <div style="margin: 2rem 0;">
+                        <div class="contract-stat-value">≈ 0.25%</div>
+                        <div>of total supply</div>
+                    </div>
+                    <div style="background: rgba(247, 147, 26, 0.1); padding: 1rem; border-radius: 10px;">
+                        <div>Staking Yield</div>
+                        <div style="font-size: 1.5rem; color: var(--bitcoin-orange);">8.5% APR</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightning Network Section -->
+    <section class="lightning-section" id="lightning">
+        <span class="section-badge">⚡ Lightning Network</span>
+        <h2 class="section-title">Instant <span class="gradient-text">Payments</span> Worldwide</h2>
+        <div class="lightning-grid">
+            <div class="lightning-card">
+                <div class="lightning-icon">⚡</div>
+                <div class="lightning-value">0.001</div>
+                <div>sats/second</div>
+            </div>
+            <div class="lightning-card">
+                <div class="lightning-icon">🌐</div>
+                <div class="lightning-value">47K</div>
+                <div>Active Channels</div>
+            </div>
+            <div class="lightning-card">
+                <div class="lightning-icon">💰</div>
+                <div class="lightning-value">₿ 3,450</div>
+                <div>Network Capacity</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="section-header">
+            <span class="section-badge">💬 Community</span>
+            <h2 class="section-title">What <span class="gradient-text">Node Operators</span> Say</h2>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <p class="testimonial-text">"Running a full node and booking workspaces with Bitcoin has never been easier. True decentralization in action."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">⚡</div>
+                    <div class="author-info">
+                        <h4>Michael</h4>
+                        <p>Node Operator #4456</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">"The Lightning integration is flawless. I pay for my daily workspace in milliseconds with minimal fees."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">₿</div>
+                    <div class="author-info">
+                        <h4>Sarah</h4>
+                        <p>Lightning User</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">"Being able to stake my tokens and participate in governance while using physical spaces is revolutionary."</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">🏛️</div>
+                    <div class="author-info">
+                        <h4>David</h4>
+                        <p>DAO Member</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="cta-content">
+            <h2 class="cta-title">Join the <span class="gradient-text">Decentralized</span> Workspace Revolution</h2>
+            <p class="cta-description">Be your own bank. Be your own landlord. Own your workspace.</p>
+            <div class="btc-ticker">
+                <div class="ticker-item">
+                    <span>BTC/USD</span>
+                    <span class="ticker-up">↑ $63,421</span>
+                </div>
+                <div class="ticker-item">
+                    <span>Market Cap</span>
+                    <span>$1.24T</span>
+                </div>
+                <div class="ticker-item">
+                    <span>Hashrate</span>
+                    <span>425 EH/s</span>
+                </div>
+            </div>
+            <a href="#" class="btn btn-primary" style="margin-top: 2rem; font-size: 1.2rem; padding: 1.2rem 3rem;">
+                <span>⚡</span> Connect Wallet & Start
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div>
+                <div class="footer-logo">
+                    <span class="btc-symbol">₿</span>
+                    <span class="logo-text">AIR</span>
+                    <span class="blockchain-text">DESK</span>
+                </div>
+                <p class="footer-description">Decentralizing the workspace industry, one block at a time.</p>
+                <div class="btc-price">
+                    <span>₿ 1 = $63,421</span>
+                    <span class="ticker-up">↑ 2.4%</span>
+                </div>
+                <div class="social-links">
+                    <a href="#" class="social-link">𝕏</a>
+                    <a href="#" class="social-link">💬</a>
+                    <a href="#" class="social-link">📱</a>
+                    <a href="#" class="social-link">⚡</a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4>Protocol</h4>
+                <a href="#">Whitepaper</a>
+                <a href="#">GitHub</a>
+                <a href="#">Audit</a>
+                <a href="#">Block Explorer</a>
+            </div>
+            <div class="footer-column">
+                <h4>Community</h4>
+                <a href="#">DAO Forum</a>
+                <a href="#">Discord</a>
+                <a href="#">Twitter</a>
+                <a href="#">Telegram</a>
+            </div>
+            <div class="footer-column">
+                <h4>Resources</h4>
+                <a href="#">Documentation</a>
+                <a href="#">API</a>
+                <a href="#">Node Setup</a>
+                <a href="#">Lightning</a>
+            </div>
+            <div class="footer-column">
+                <h4>Legal</h4>
+                <a href="#">Terms</a>
+                <a href="#">Privacy</a>
+                <a href="#">Disclaimers</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2024 AIRDESK Protocol. Running on Bitcoin Block #840,000 • <span style="color: var(--bitcoin-orange);">Verify with your own node</span></p>
+        </div>
+    </footer>
+
+    <script>
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const matrix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}比特币";
+        const matrixArray = matrix.split("");
+
+        const fontSize = 10;
+        const columns = canvas.width / fontSize;
+
+        const drops = [];
+        for(let x = 0; x < columns; x++) {
+            drops[x] = 1;
+        }
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#f7931a';
+            ctx.font = fontSize + 'px monospace';
+
+            for(let i = 0; i < drops.length; i++) {
+                const text = matrixArray[Math.floor(Math.random() * matrixArray.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 35);
+
+        // Blockchain Connection Lines
+        function createNodes() {
+            const container = document.getElementById('connectionLines');
+            const numNodes = 20;
+            const nodes = [];
+
+            // Create nodes
+            for(let i = 0; i < numNodes; i++) {
+                const node = document.createElement('div');
+                node.className = 'node';
+                node.style.left = Math.random() * 100 + '%';
+                node.style.top = Math.random() * 100 + '%';
+                container.appendChild(node);
+                nodes.push(node);
+            }
+
+            // Draw connections
+            function drawConnections() {
+                const ctx = document.createElement('canvas').getContext('2d');
+                const canvas = ctx.canvas;
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                canvas.style.position = 'absolute';
+                canvas.style.top = '0';
+                canvas.style.left = '0';
+                canvas.style.pointerEvents = 'none';
+                
+                container.innerHTML = '';
+                container.appendChild(canvas);
+                
+                nodes.forEach(node => container.appendChild(node));
+
+                ctx.strokeStyle = 'rgba(247, 147, 26, 0.1)';
+                ctx.lineWidth = 1;
+
+                for(let i = 0; i < nodes.length; i++) {
+                    for(let j = i + 1; j < nodes.length; j++) {
+                        const rect1 = nodes[i].getBoundingClientRect();
+                        const rect2 = nodes[j].getBoundingClientRect();
+                        
+                        const distance = Math.hypot(
+                            rect2.left - rect1.left,
+                            rect2.top - rect1.top
+                        );
+
+                        if(distance < 200) {
+                            ctx.beginPath();
+                            ctx.moveTo(rect1.left + rect1.width/2, rect1.top + rect1.height/2);
+                            ctx.lineTo(rect2.left + rect2.width/2, rect2.top + rect2.height/2);
+                            ctx.strokeStyle = `rgba(247, 147, 26, ${0.1 * (1 - distance/200)})`;
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                requestAnimationFrame(drawConnections);
+            }
+
+            drawConnections();
+        }
+
+        createNodes();
+
+        // Custom Cursor
+        const cursor = document.querySelector('.cursor');
+        const cursorFollower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                cursorFollower.style.left = e.clientX + 'px';
+                cursorFollower.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // Loading Screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loadingScreen').classList.add('hidden');
+            }, 3000);
+        });
+
+        // Mining Animation
+        let nonce = 0;
+        setInterval(() => {
+            nonce = Math.floor(Math.random() * 0xFFFFFFFF);
+            document.getElementById('nonce').textContent = nonce.toString(16).padStart(8, '0');
+        }, 100);
+
+        // Wallet Connect Animation
+        const walletBtn = document.getElementById('walletConnect');
+        walletBtn.addEventListener('click', () => {
+            walletBtn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                walletBtn.style.transform = 'scale(1)';
+            }, 200);
+            
+            // Simulate transaction
+            alert('⚡ Lightning payment sent! Check your wallet.');
+        });
+
+        // Parallax Effect for Blocks
+        document.addEventListener('mousemove', (e) => {
+            const blocks = document.querySelectorAll('.block');
+            const mouseX = e.clientX / window.innerWidth - 0.5;
+            const mouseY = e.clientY / window.innerHeight - 0.5;
+
+            blocks.forEach((block, index) => {
+                const speed = (index + 1) * 20;
+                const x = mouseX * speed;
+                const y = mouseY * speed;
+                block.style.transform = `translate(${x}px, ${y}px) rotate(${block.style.getPropertyValue('--rotate') || '0deg'})`;
+            });
+        });
+
+        // Block Height Counter
+        let blockHeight = 840000;
+        setInterval(() => {
+            blockHeight++;
+            document.querySelectorAll('.block-header span:first-child').forEach(el => {
+                el.textContent = '#' + blockHeight.toLocaleString();
+            });
+        }, 10000);
+
+        // Bitcoin Price Ticker
+        const prices = [63421, 63850, 64120, 63580, 64230];
+        let priceIndex = 0;
+        setInterval(() => {
+            priceIndex = (priceIndex + 1) % prices.length;
+            document.querySelectorAll('.btc-price span:first-child, .ticker-item span:first-child + span').forEach(el => {
+                if(el.classList.contains('ticker-up') || el.classList.contains('ticker-down')) {
+                    const newPrice = prices[priceIndex];
+                    const oldPrice = parseFloat(el.textContent.replace('↑ $', '').replace('↓ $', ''));
+                    const change = newPrice - oldPrice;
+                    el.className = change >= 0 ? 'ticker-up' : 'ticker-down';
+                    el.textContent = (change >= 0 ? '↑' : '↓') + ' $' + newPrice;
+                }
+            });
+        }, 5000);
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for Animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feature-card, .workspace-card, .testimonial-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Network Stats
+        const hashrate = document.querySelector('.hashrate');
+        let currentHashrate = 425;
+        setInterval(() => {
+            currentHashrate += (Math.random() - 0.5) * 10;
+            hashrate.textContent = `⚡ Hashrate: ${currentHashrate.toFixed(1)} EH/s`;
+        }, 2000);
+
+        // Node Count
+        const nodeCount = document.querySelector('.lightning-grid .lightning-card:nth-child(2) .lightning-value');
+        let nodes = 47000;
+        setInterval(() => {
+            nodes += Math.floor(Math.random() * 100) - 30;
+            if(nodeCount) nodeCount.textContent = nodes.toLocaleString();
+        }, 5000);
+
+        console.log('⚡ AIRDESK Protocol initialized on Bitcoin Block #' + blockHeight);
+    </script>
+</body>
+</html>
