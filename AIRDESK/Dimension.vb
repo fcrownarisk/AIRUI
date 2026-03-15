@@ -1,6 +1,5 @@
 ' AIRDESK Multi-Touch Sandbox Game
 ' 11 Dimensions of Reality Simulation
-' Visual Basic .NET Enterprise Edition
 
 Imports System
 Imports System.Collections.Generic
@@ -65,9 +64,9 @@ Class AIRDESK_MultiTouch_Game
     
     #Region "Structures & Classes"
     
-    ''' <summary>
+    
     ''' 0-> Dot Line Shape Face Cube (Topology Fractal Structure)
-    ''' </summary>
+    
     Class TopologyFractal
         Public Property Dimension As Integer
         Public Property HausdorffDimension As Double
@@ -131,10 +130,10 @@ Class AIRDESK_MultiTouch_Game
             Return sponge
         End Function
     End Class
-    
-    ''' <summary>
+
+                    
     ''' 1-> A moving object Tesla coil and a collision box
-    ''' </summary>
+
     Class TeslaCoilSystem
         Public Property Position As Vector3
         Public Property Velocity As Vector3
@@ -210,10 +209,10 @@ Class AIRDESK_MultiTouch_Game
             Next
         End Sub
     End Class
+        
     
-    ''' <summary>
     ''' 2-> GUI and API Gap between reality and imagination
-    ''' </summary>
+    
     Class RealityInterface
         Public Property ConsciousnessField As Double
         Public Property ImaginationQuotient As Double
@@ -265,9 +264,9 @@ Class AIRDESK_MultiTouch_Game
         End Function
     End Class
     
-    ''' <summary>
+    
     ''' 3-> From BIGBANG to Blackhole
-    ''' </summary>
+    
     Class CosmicEvolution
         Public Property UniverseAge As Double ' In seconds
         Public Property ScaleFactor As Double
@@ -320,9 +319,9 @@ Class AIRDESK_MultiTouch_Game
         Public Event BlackHoleEvaporated(bh As BlackHole)
     End Class
     
-    ''' <summary>
+    
     ''' 4-> Maxwell Magnetic and Electronic Equation and field
-    ''' </summary>
+    
     Class MaxwellField
         Public Property E As Vector3 ' Electric field
         Public Property B As Vector3 ' Magnetic field
@@ -372,9 +371,9 @@ Class AIRDESK_MultiTouch_Game
         End Function
     End Class
     
-    ''' <summary>
+    
     ''' 5-> Einstein Relativity
-    ''' </summary>
+    
     Class SpacetimeMetric
         Public Property MetricTensor(,) As Double ' 4x4 metric tensor g_μν
         Public Property ChristoffelSymbols(,,) As Double
@@ -481,9 +480,9 @@ Class AIRDESK_MultiTouch_Game
         End Sub
     End Class
     
-    ''' <summary>
+    
     ''' 6=> Hawking and Bekenstein Blackhole Entropy and Surface Area Law (S=4*pai*R*R)
-    ''' </summary>
+    
     Class BlackHoleThermodynamics
         Public Property Mass As Double ' Solar masses
         Public Property Charge As Double
@@ -529,9 +528,9 @@ Class AIRDESK_MultiTouch_Game
         End Function
     End Class
     
-    ''' <summary>
+    
     ''' 7=> energy level and energy band
-    ''' </summary>
+    
     Class EnergyBandStructure
         Public Property ValenceBand As Band
         Public Property ConductionBand As Band
@@ -579,9 +578,9 @@ Class AIRDESK_MultiTouch_Game
         End Function
     End Class
     
-    ''' <summary>
+    
     ''' 8=>> Black-Body Radiation Problem (solved by Max Plank)
-    ''' </summary>
+    
     Class BlackBodyRadiation
         Public Property Temperature As Double
         Public Property Wavelength As Double
@@ -628,9 +627,9 @@ Class AIRDESK_MultiTouch_Game
         End Function
     End Class
     
-    ''' <summary>
+    
     ''' 9=>> Eigen-State Activated-State Bloch-Sphere Hilbert-Space Hilbert-Curve
-    ''' </summary>
+    
     Class QuantumMechanics
         Public Property WaveFunction As Complex()
         Public Property Hamiltonian As Complex(,)
@@ -696,9 +695,9 @@ Class AIRDESK_MultiTouch_Game
         End Function
     End Class
     
-    ''' <summary>
+    
     ''' 10-> three basic principle: prime number, 1+1=2, xyznnn-tensor, four-color
-    ''' </summary>
+    
     Class FundamentalMathematics
         Public Property PrimeNumbers As List(Of Long)
         Public Property TensorField As Tensor(Of Double)
@@ -789,9 +788,9 @@ Class AIRDESK_MultiTouch_Game
         End Function
     End Class
     
-    ''' <summary>
+    
     ''' 11-> 7 Problem (advanced math conjecture)
-    ''' </summary>
+    
     Class MillenniumProblems
         Public Property PvsNP As Boolean?
         Public Property RiemannHypothesis As Boolean?
@@ -1886,7 +1885,6 @@ Class AIRDESK_MultiTouch_Game
         Public Sub Main()
             Application.EnableVisualStyles()
             Application.SetCompatibleTextRenderingDefault(False)
-            
             Try
                 Using game As New AIRDESK_Sandbox()
                     Application.Run(game)
@@ -1897,7 +1895,5 @@ Class AIRDESK_MultiTouch_Game
             End Try
         End Sub
     End Module
-    
     #End Region
-    
 End Class
